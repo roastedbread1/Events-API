@@ -13,11 +13,11 @@ const { v4: uuidv4, validate: validateUUID } = require('uuid');
         //     res.status(400).send('Missing required information');
         //     return;
         // }
-        
+        console.log(req.body);
         const newEvent = new MOEvents.Event(title,description, location, maxParticipants, id);
         events.push(newEvent);
         res.status(201).json(newEvent);
-        console.log('Received request body:', req.body)
+        console.log(events[0].title)
     };
 
     export const getEvents = (req: Request, res: Response) => {

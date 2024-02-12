@@ -19,7 +19,7 @@ export namespace MO {
         }
 
         public static eventExist(event: Event): boolean {
-            return !!event.id;
+            return !event.id;
         }
 
         public static registerParticipant(event: Event, user: string) {
