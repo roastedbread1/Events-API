@@ -2,20 +2,20 @@ export namespace MO {
     export class Event {
         id: string;
         title: string;
-        date: Date;
+        // date: Date;
         description: string;
         location: string;
         maxParticipants: number;
         participants: string[];
 
-        constructor(id: string, title: string, date: Date, description: string, location: string, maxParticipants: number) {
-            this.id = id;
+        constructor( title: string, description: string, location: string, maxParticipants: number, id : string) {
             this.title = title;
-            this.date = date;
+            // this.date = new Date(date);
             this.description = description;
             this.location = location;
             this.maxParticipants = maxParticipants;
             this.participants = [];
+            this.id = id;
         }
 
         public static eventExist(event: Event): boolean {

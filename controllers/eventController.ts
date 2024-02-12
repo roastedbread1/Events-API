@@ -7,21 +7,24 @@ const { v4: uuidv4, validate: validateUUID } = require('uuid');
 
 
    export const createEvent = (req: Request, res: Response) => {
-        const { title, date, description, location, maxParticipants } = req.body;
+        const { title, description, location, maxParticipants } = req.body;
         const id = uuidv4();
-        if (!title || !date || !description || !location || !maxParticipants) {
-            res.status(400).send('Missing required information');
-            return;
-        }
-        const newEvent = new MOEvents.Event(id, title, date, description, location, maxParticipants);
+        // if (!title || !date || !description || !location || !maxParticipants) {
+        //     res.status(400).send('Missing required information');
+        //     return;
+        // }
+        
+        const newEvent = new MOEvents.Event(id, title,description, location, maxParticipants);
         events.push(newEvent);
         res.status(201).json(newEvent);
+        console.log('Received request body:', req.body)
     };
 
-   export const  getEvents = (req: Request, res: Response) => {
+    export const getEvents = (req: Request, res: Response) => {
+    
         res.status(200).json(events);
     };
-
+    
  export const getEventByID =(req: Request, res: Response) => {
         const id = req.params.id;
         const event = events.find(event => event.id === id);
@@ -43,7 +46,7 @@ const { v4: uuidv4, validate: validateUUID } = require('uuid');
         const event = events.find(event => event.id === String(id));
         if (event) {
             event.title = title;
-            event.date = date;
+            // event.date = date;
             event.description = description;
             event.location = location;
             event.maxParticipants = maxParticipants;

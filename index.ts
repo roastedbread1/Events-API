@@ -11,9 +11,9 @@ import { userRouter } from './routes/userRouter';
 
 app.use(express.json()); 
 
-app.use('api/events', eventRouter);
+app.use('/events', eventRouter);
 
-app.use('api/users', userRouter);
+app.use('/users', userRouter);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
