@@ -2,12 +2,16 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-const evenRouter = require('./routes/eventRouter.js');
-const userRouter = require('./routes/userRouter');
 
-app.use(express.static('public'));
+import { eventRouter } from './routes/eventRouter';
+import { userRouter } from './routes/userRouter';
 
-app.use('api/events', evenRouter);
+
+
+
+app.use(express.json()); 
+
+app.use('api/events', eventRouter);
 
 app.use('api/users', userRouter);
 
