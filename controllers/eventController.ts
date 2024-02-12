@@ -14,7 +14,7 @@ const { v4: uuidv4, validate: validateUUID } = require('uuid');
         //     return;
         // }
         
-        const newEvent = new MOEvents.Event(id, title,description, location, maxParticipants);
+        const newEvent = new MOEvents.Event(title,description, location, maxParticipants, id);
         events.push(newEvent);
         res.status(201).json(newEvent);
         console.log('Received request body:', req.body)
