@@ -1,20 +1,21 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { MO as MOEvents } from '../models/events';
+const { v4: uuidv4} = require('uuid');
 import { MO } from '../models/users';
 
-const users: MO.User[] = [];
+export const users: MO.User[] = [];
 
 
    export const  createUser = (req: Request, res: Response) => {
-        const { id, name, email, password } = req.body;
+        const { name, email, password } = req.body;
+        const id = uuidv4();
+        // if (!name || !email || !password) {
+        //     res.status(400).send('Missing required information');
+        //     return;
+        // }
 
-        if (!id || !name || !email || !password) {
-            res.status(400).send('Missing required information');
-            return;
-        }
-
-        const hashedPassword = bcrypt.hashSync(password, 10);
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(password, salt);
 
         const newUser = new MO.User(id, name, email, hashedPassword);
         users.push(newUser);
@@ -40,7 +41,7 @@ const users: MO.User[] = [];
         const id = req.params.id;
         const { name, email, password } = req.body;
         const user = users.find(user => user.id === id);
-
+        
         if (!user) {
             res.status(404).send('User not found');
             return;

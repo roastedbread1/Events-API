@@ -33,6 +33,11 @@ export namespace MO {
         }
 
 
+        getName(){
+            return this.name;
+        }
     }
 }
+
+
 

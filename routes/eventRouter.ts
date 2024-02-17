@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEvent, getEvents, getEventByID, updateEvent, deleteEvent } from '../controllers/eventController';
+import { createEvent, getEvents, getEventByID, updateEvent, deleteEvent, registerForEvent, unregisterFromEvent } from '../controllers/eventController';
 
 const eventRouter = express.Router();
 
@@ -8,5 +8,8 @@ eventRouter.get('/', getEvents);
 eventRouter.get('/:id', getEventByID);
 eventRouter.put('/:id', updateEvent);
 eventRouter.delete('/:id', deleteEvent);
+eventRouter.post('/register', registerForEvent );
+eventRouter.put('/unregister', unregisterFromEvent)
+
 
 export { eventRouter };

@@ -25,6 +25,8 @@ export namespace MO {
         public static registerParticipant(event: Event, user: string) {
             if (event.participants.length < event.maxParticipants) {
                 event.participants.push(user);
+            } else {
+                throw new Error('Event is full');
             }
         }
 
@@ -32,6 +34,8 @@ export namespace MO {
             const index = event.participants.indexOf(user);
             if (index !== -1) {
                 event.participants.splice(index, 1);
+            } else {
+                throw new Error('User not found');
             }
         }
     }

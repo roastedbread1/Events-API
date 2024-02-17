@@ -4,14 +4,14 @@ import { Request, Response } from 'express';
 const events: MOEvents.Event[] = [];
 const { v4: uuidv4, validate: validateUUID } = require('uuid');
 
-
+import {users as users} from '../controllers/userController';
 
    export const createEvent = (req: Request, res: Response) => {
         const { title, description, location, maxParticipants } = req.body;
         const id = uuidv4();
-        // if (!title || !date || !description || !location || !maxParticipants) {
-        //     res.status(400).send('Missing required information');
-        //     return;
+        //  if (!title || !description || !location || !maxParticipants) {
+        //      res.status(400).send('Missing required information');
+        //      return;
         // }
         console.log(req.body);
         const newEvent = new MOEvents.Event(title,description, location, maxParticipants, id);
@@ -26,13 +26,8 @@ const { v4: uuidv4, validate: validateUUID } = require('uuid');
     };
     
  export const getEventByID =(req: Request, res: Response) => {
-        const id = req.params.id;
-        const event = events.find(event => event.id === id);
-        if (event) {
-            res.status(200).json(event);
-        } else {
-            res.status(404).send('Event not found');
-        }
+        const {eventID, userID} = req.body;
+
     };
 
    export const  updateEvent = (req: Request, res: Response) => {
@@ -72,6 +67,42 @@ const { v4: uuidv4, validate: validateUUID } = require('uuid');
             res.status(404).send('Event not found');
         }
     };
+export const registerForEvent = (req: Request, res: Response) => {
+const {eventID, userID} = req.body;
 
+const event = events.find(event => event.id === eventID);
+if(!event){
+    res.status(404).send('Event not found');
+    return;
+}
 
+const user = users.find(user => user.id === userID);
 
+if(!user){
+    res.status(404).send('User not found');
+    return;
+
+}
+
+user.registerForEvent(event);
+
+}
+
+export const unregisterFromEvent = (req: Request, res: Response) => {
+    const {eventId, userID} = req.body;
+    const event = events.find(event => event.id === eventId);
+    if(!event){
+        res.status(404).send('Event not found');
+        return;
+    }
+
+    const user = users.find(user => user.id === userID);
+
+    if(!user){
+        res.status(404).send('User not found');
+        return;
+
+    }
+
+    user.unregisterFromEvent(event);
+}
