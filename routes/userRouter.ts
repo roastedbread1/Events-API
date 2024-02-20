@@ -1,12 +1,16 @@
 import express from 'express';
-import {createUser , getUsers, getUserByID, updateUser, deleteUser} from '../controllers/userController';
+import {createUser , getUsers, getUserByID, updateUser, deleteUser, login} from '../controllers/userController';
+import { cookieAuth } from '../middleware/cookieAuth';
 
 const userRouter = express.Router();
 
-userRouter.post('/create', createUser);
-userRouter.get('/', getUsers);
-userRouter.get('/:id', getUserByID);
-userRouter.put('/:id', updateUser);
-userRouter.delete('/:id', deleteUser);
+userRouter.post('/register', createUser);
+userRouter.post('/login', login);
+
+
+userRouter.get('/',cookieAuth,  getUsers);
+userRouter.get('/:id',cookieAuth,  getUserByID);
+userRouter.put('/:id',cookieAuth,  updateUser);
+userRouter.delete('/:id',cookieAuth,  deleteUser);
 
 export { userRouter };

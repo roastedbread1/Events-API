@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 const { v4: uuidv4} = require('uuid');
 import { MO } from '../models/users';
+import jwt from 'jsonwebtoken';
+
 
 export const users: MO.User[] = [];
 
@@ -9,10 +11,10 @@ export const users: MO.User[] = [];
    export const  createUser = (req: Request, res: Response) => {
         const { name, email, password } = req.body;
         const id = uuidv4();
-        // if (!name || !email || !password) {
-        //     res.status(400).send('Missing required information');
-        //     return;
-        // }
+        if (!name || !email || !password) {
+            res.status(400).send('Missing required information');
+            return;
+        }
 
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(password, salt);
@@ -21,6 +23,30 @@ export const users: MO.User[] = [];
         users.push(newUser);
         res.status(201).json(newUser);
     }
+
+    export const login = async(req : Request, res: Response) => {
+        try {
+            const { email, password } = req.body;
+            const user = await users.find(user => user.email === email);
+            if (!user) {
+                return res.status(401).send('User not found');
+            }
+            const validPassword = await bcrypt.compare(password, user.password);
+            if (!validPassword) {
+                return res.status(401).send('Invalid password');
+            }
+            const token = jwt.sign({ id: user.id }, "BRUH", { expiresIn: '5h' });
+            return res.json({ 
+                data : {    
+                    id: user.id
+                }, 
+                token : token
+             });
+            
+        } catch (e) {
+            res.status(500).json({ error: "login failed" });
+        };
+}
 
     export const getUsers = (req: Request, res: Response) => {
         res.status(200).json(users);

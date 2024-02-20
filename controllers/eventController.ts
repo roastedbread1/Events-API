@@ -9,10 +9,7 @@ import {users as users} from '../controllers/userController';
    export const createEvent = (req: Request, res: Response) => {
         const { title, description, location, maxParticipants } = req.body;
         const id = uuidv4();
-        //  if (!title || !description || !location || !maxParticipants) {
-        //      res.status(400).send('Missing required information');
-        //      return;
-        // }
+ 
         console.log(req.body);
         const newEvent = new MOEvents.Event(title,description, location, maxParticipants, id);
         events.push(newEvent);
