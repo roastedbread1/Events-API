@@ -3,9 +3,33 @@ import bcrypt from 'bcrypt';
 const { v4: uuidv4} = require('uuid');
 import { MO } from '../models/users';
 import jwt from 'jsonwebtoken';
-
+import validator from 'validator';
+import PasswordValidator from 'password-validator';
+import { validate } from 'express-validation';
 
 export const users: MO.User[] = [];
+const passwordSchema = new PasswordValidator();
+passwordSchema
+    .is().min(8)
+    .is().max(16)
+    .has().uppercase()
+    .has().lowercase()
+    .has().digits()
+    .has().not().spaces();
+
+    const validatePassword = (password: string) => {
+        if (!passwordSchema.validate(password)) {
+            return false;
+        }
+        return true;
+    }
+
+    const validateEmail = (email: string) => {
+        if (!validator.isEmail(email)) {
+            return false;
+        }
+        return true;
+    }
 
 
    export const  createUser = (req: Request, res: Response) => {
@@ -15,7 +39,14 @@ export const users: MO.User[] = [];
             res.status(400).send('Missing required information');
             return;
         }
-
+        if (!validateEmail(email)) {
+            res.status(400).send('Invalid email');
+            return;
+        }
+        if (!validatePassword(password)) {
+            res.status(400).send('Invalid password');
+            return;
+        }
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(password, salt);
 
@@ -27,9 +58,14 @@ export const users: MO.User[] = [];
     export const login = async(req : Request, res: Response) => {
         try {
             const { email, password } = req.body;
+
             const user = await users.find(user => user.email === email);
             if (!user) {
                 return res.status(401).send('User not found');
+            }
+            if (!validateEmail(email)) {
+                res.status(400).send('Invalid email');
+                return;
             }
             const validPassword = await bcrypt.compare(password, user.password);
             if (!validPassword) {
