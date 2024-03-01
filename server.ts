@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 import { eventRouter } from './routes/eventRouter';
 import { userRouter } from './routes/userRouter';
 
-app.use(cookieParser());
+//app.use(cookieParser());
 
 
 app.use(express.json()); 
